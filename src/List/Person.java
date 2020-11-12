@@ -12,7 +12,7 @@ package List;
 public class Person implements Comparable{
     private String gender,name;
     private int age;
-    public Person(String n,String g,int a){
+    public Person(String n,int a,String g){
         name = n;age = a;gender=g;
     }
     public int getAge(){
@@ -36,7 +36,8 @@ public class Person implements Comparable{
 
     @Override
     public int compareTo(Object t) {
-        Person other = (Person)t;
+        String other = ((Person)t).getName();
+        return name.compareTo(other);
         
     }
 }

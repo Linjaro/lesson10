@@ -5,17 +5,29 @@
  */
 package List;
 
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author moha7150
  */
 public class PeopleList extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PeopleList
-     */
+    ArrayList<Person> people = new ArrayList();
+    DefaultListModel list = new DefaultListModel();
     public PeopleList() {
         initComponents();
+        people.add(new Person("Bob",25,"M"));
+        people.add(new Person("Fran",55,"F"));
+        people.add(new Person("Mike",15,"M"));
+        people.add(new Person("Sue",30,"F"));
+        lstpeople.setModel(list);
+        for (Person p :people){
+            list.addElement(p.getName());
+        }
+        
     }
 
     /**
@@ -66,7 +78,7 @@ public class PeopleList extends javax.swing.JFrame {
 
         buttonGroup1.add(optfemale);
         optfemale.setText("Female");
-        optfemale.setActionCommand("f");
+        optfemale.setActionCommand("F");
         optfemale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 optfemaleActionPerformed(evt);
@@ -75,7 +87,7 @@ public class PeopleList extends javax.swing.JFrame {
 
         buttonGroup1.add(optmale);
         optmale.setText("Male");
-        optmale.setActionCommand("m");
+        optmale.setActionCommand("M");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,7 +112,7 @@ public class PeopleList extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/exit.png"))); // NOI18N
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/exit.png"))); // NOI18N
         jMenuItem1.setText("Exit");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,32 +125,62 @@ public class PeopleList extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
 
-        mnuclear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/exit.png"))); // NOI18N
+        mnuclear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/exit.png"))); // NOI18N
         mnuclear.setText("Clear");
+        mnuclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuclearActionPerformed(evt);
+            }
+        });
         jMenu2.add(mnuclear);
 
-        mnuadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/insert.png"))); // NOI18N
+        mnuadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/insert.png"))); // NOI18N
         mnuadd.setText("Add");
+        mnuadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuaddActionPerformed(evt);
+            }
+        });
         jMenu2.add(mnuadd);
 
-        mnudelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/delete.png"))); // NOI18N
+        mnudelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/delete.png"))); // NOI18N
         mnudelete.setText("Delete");
+        mnudelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnudeleteActionPerformed(evt);
+            }
+        });
         jMenu2.add(mnudelete);
 
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Filter");
 
-        mnuall.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/all.png"))); // NOI18N
+        mnuall.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/all.png"))); // NOI18N
         mnuall.setText("Show All");
+        mnuall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuallActionPerformed(evt);
+            }
+        });
         jMenu3.add(mnuall);
 
-        mnufemale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/female.png"))); // NOI18N
+        mnufemale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/female.png"))); // NOI18N
         mnufemale.setText("Female");
+        mnufemale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnufemaleActionPerformed(evt);
+            }
+        });
         jMenu3.add(mnufemale);
 
-        mnumale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insertRemove/male.png"))); // NOI18N
+        mnumale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/List/male.png"))); // NOI18N
         mnumale.setText("Male");
+        mnumale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnumaleActionPerformed(evt);
+            }
+        });
         jMenu3.add(mnumale);
 
         jMenuBar1.add(jMenu3);
@@ -198,9 +240,143 @@ public class PeopleList extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void lstpeopleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstpeopleMouseClicked
-        
+        String name = "" + lstpeople.getSelectedValue();
+        int loc = search(people, new Person(name,0,""));
+        show(people.get(loc));
     }//GEN-LAST:event_lstpeopleMouseClicked
+    public void show(Person p){
+        txtname.setText(p.getName());
+        txtage.setText(""+p.getAge());
+        if(p.getGender()== "M")
+            optmale.setSelected(true);
+        else
+            optfemale.setSelected(true);
+    }
+    private void mnudeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnudeleteActionPerformed
+        int i = lstpeople.getSelectedIndex();
+        list.removeElementAt(i);
+        people.remove(i);
+        clearForm();
+        
+        
+    }//GEN-LAST:event_mnudeleteActionPerformed
 
+    private void mnuaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuaddActionPerformed
+        
+        list.clear();
+        
+        for (Person p :people){
+            list.addElement(p.getName());
+        }
+        int tempa = Integer.parseInt(txtage.getText());
+        String tempg = buttonGroup1.getSelection().getActionCommand(), tempn = txtname.getText();
+        try{
+            tempa = Integer.parseInt(txtage.getText());
+            tempn = txtname.getText();
+            tempg = buttonGroup1.getSelection().getActionCommand();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Must fill out correctly");
+            return;
+        }
+        
+        
+        Person tempp = new Person(tempn,tempa,tempg);
+        
+        if(search(people,tempp)==-1){
+            int i = findInsertPoint(people, tempp);
+            people.add(i, tempp);
+            list.add(i, tempp.getName());
+            
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Must'nt be already an existing person");
+        }
+    }//GEN-LAST:event_mnuaddActionPerformed
+
+    private void mnuclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuclearActionPerformed
+        clearForm();
+    }//GEN-LAST:event_mnuclearActionPerformed
+
+    private void mnuallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuallActionPerformed
+        list.clear();
+        
+        for (Person p :people){
+            list.addElement(p.getName());
+        }
+        mnuadd.enable(true);
+        mnudelete.enable(true);
+    }//GEN-LAST:event_mnuallActionPerformed
+
+    private void mnufemaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnufemaleActionPerformed
+        list.clear();
+        
+        for (Person p : people) {
+            if(p.getGender().equals("F")){
+                 list.addElement(p.getName());
+                
+            }
+        }
+        mnuadd.enable(false);
+        mnudelete.enable(false);
+    }//GEN-LAST:event_mnufemaleActionPerformed
+
+    private void mnumaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnumaleActionPerformed
+        list.clear();
+        
+        for (Person p : people) {
+            if(p.getGender().equals("M")){
+                list.addElement(p.getName());
+                
+            }
+        }
+        mnuadd.enable(false);
+        mnudelete.enable(false);
+    }//GEN-LAST:event_mnumaleActionPerformed
+   
+    public static int search (ArrayList a, Object searchValue){
+	   int left = 0;
+	   int right = a.size()-1;
+	   while (left <= right){
+	      int midpoint = (left + right) / 2;
+	      int result = ((Comparable)a.get(midpoint)).compareTo(searchValue); 
+	      if (result == 0)
+	         return midpoint;
+	      else if (result < 0)
+	         left = midpoint + 1;
+	      else
+	         right = midpoint-1;
+	   }
+	   return -1;	
+		   
+    }
+    public static int findInsertPoint(ArrayList a, Object searchValue) {
+        int left = 0;
+        int right = a.size() - 1;
+        int midpoint = 0;
+        int result = 0;
+
+        while (left <= right) {
+            midpoint = (left + right) / 2;
+            result = ((Comparable) a.get(midpoint)).compareTo(searchValue);
+
+            if (result < 0) {
+                left = midpoint + 1;
+            } else {
+                right = midpoint - 1;
+            }
+        }
+        if (result < 0) {
+            midpoint++;
+        }
+        return midpoint;
+    }
+    
+    private void clearForm(){
+        txtname.setText("");
+        txtage.setText("");
+        buttonGroup1.clearSelection();
+        lstpeople.clearSelection();
+    }
     /**
      * @param args the command line arguments
      */
